@@ -6,7 +6,7 @@ class Player(pygame.sprite.Sprite):
         self.screen_size = screen_size
         self.scale = scale
         self.speed = speed
-        self.image = pygame.transform.scale(pygame.image.load('player.png').convert_alpha(),(scale, scale/2))
+        self.image = pygame.transform.scale(pygame.image.load('graphics/player.png').convert_alpha(),(scale, scale/2))
         self.rect = self.image.get_rect(midbottom = (screen_size/2, screen_size * 99 / 100))
         
     def move(self, side):

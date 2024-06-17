@@ -8,7 +8,7 @@ class Bullet(pygame.sprite.Sprite):
         self.charged = True
         self.x = 0
         self.y = -scale
-        self.image = pygame.transform.scale(pygame.image.load('bullet.png').convert_alpha(),(scale/4, scale/2))
+        self.image = pygame.transform.scale(pygame.image.load('graphics/bullet.png').convert_alpha(),(scale/4, scale/2))
 
 
     def shot(self,position):
