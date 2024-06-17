@@ -7,7 +7,8 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__()
         self.speed = speed
         self.friendly = friendly
-        self.image = pygame.transform.scale(pygame.image.load('graphics/bullet.png').convert_alpha(),(scale/4, scale/2))
+        self.image = pygame.transform.scale(pygame.image.load('graphics/bullet.png').convert_alpha(),(scale/10, scale/2))
+        self.image.fill('white')
         self.rect = self.image.get_rect(midbottom = position)
 
     def update(self) -> None:

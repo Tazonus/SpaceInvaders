@@ -2,6 +2,7 @@ import pygame, sys, random
 from player import Player
 from bullet import Bullet
 from alien import Alien
+from blockade import Blockade
 from config import scale
 
 class Game:
@@ -9,17 +10,23 @@ class Game:
         #General
         self.font = pygame.font.Font('Pixeboy.ttf', 40)
         self.points = 0
-        #Player
+
+        #Player    
         self.player_sprite = Player(screen_size)
         self.player = pygame.sprite.GroupSingle(self.player_sprite)
-
-        #zmiana planow
-
+        self.blockades = pygame.sprite.Group()
+        self.blockade_setup()
         #Aliens
         self.aliens = pygame.sprite.Group()
         self.alien_setup(rows = 5, cols = 11)
+        
         self.alien_direction = 1
         self.enemy_lasers = pygame.sprite.Group()
+
+    def blockade_setup(self):
+        self.blockades.add(Blockade((screen_size * 1/7, screen_size - scale * 2)))
+        self.blockades.add(Blockade((screen_size * 6/7, screen_size - scale * 2)))
+        self.blockades.add(Blockade((screen_size * 1/2, screen_size - scale * 2)))
 
     def score(self):
         score_text = self.font.render(f'score: {self.points}', False,'white')
@@ -78,6 +85,8 @@ class Game:
                 if pygame.sprite.spritecollide(bullet, self.aliens, True):
                     self.points += 100
                     self.player_sprite.bullet.destroy()
+                elif pygame.sprite.spritecollide(bullet, self.blockades, False):
+                    self.player_sprite.bullet.destroy()
         if self.enemy_lasers:
             for laser in self.enemy_lasers:
                 if pygame.sprite.spritecollide(laser, self.player, False):
@@ -85,17 +94,19 @@ class Game:
                     if self.points < 0:
                         self.points = 0
                     laser.kill()
+                elif pygame.sprite.spritecollide(laser, self.blockades, False):
+                    laser.kill()
 
     def run(self):
         '''GameLoop here:'''
         self.alien_update()
         self.player.update()
-        self.score()
 
-
-
+        self.blockades.draw(screen)
         self.player.draw(screen)
         self.player.sprite.bulletGroup.draw(screen)
+        
+        self.score()
         self.collision_check()
 
 if __name__ == '__main__':
