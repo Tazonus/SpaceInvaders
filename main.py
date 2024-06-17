@@ -2,8 +2,8 @@ import pygame, sys
 from player import Player
 
 class Game:
-    def __init__(self):
-        Player_sprite = Player((screen_width/2 ,screen_height * 99/100),64)
+    def __init__(self,screen_size):
+        Player_sprite = Player(screen_size,64)
         self.player = pygame.sprite.GroupSingle(Player_sprite)
 
     def run(self):
@@ -16,16 +16,15 @@ class Game:
 if __name__ == '__main__':
     # Window managment:
     pygame.init()
-    screen_width = 800
-    screen_height = 800
-    screen = pygame.display.set_mode((screen_width, screen_height))
+    screen_size = 800
+    screen = pygame.display.set_mode((screen_size, screen_size))
     # Window Details
     pygame.display.set_caption("Space Invader")
     icon = pygame.image.load('ufo.png') 
     pygame.display.set_icon(icon)
 
     # Logic and time
-    game = Game()
+    game = Game(screen_size)
     clock = pygame.time.Clock()
 
     while True:
