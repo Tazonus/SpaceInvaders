@@ -1,30 +1,27 @@
+from typing import Any
 import pygame
+from config import scale
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, scale, speed = -5):
+    def __init__(self, speed, position, friendly = False):
         super().__init__()
-        self.scale = scale
         self.speed = speed
-        self.charged = True
-        self.x = 0
-        self.y = -scale
+        self.friendly = friendly
         self.image = pygame.transform.scale(pygame.image.load('graphics/bullet.png').convert_alpha(),(scale/4, scale/2))
+        self.rect = self.image.get_rect(midbottom = position)
 
-
-    def shot(self,position):
-        if self.charged == True:
-            self.charged = False
-            self.x ,self.y = position
-            self.x += self.scale*8/19
-
-    def update(self):
-        self.y += self.speed
-        if self.y<= 0:
+    def update(self) -> None:
+        self.rect.y -= self.speed
+        if self.rect.y<= 0:
             self.destroy()
 
-    def destroy(self):
-        self.charged = True
-        self.y = -self.scale
-
+    def set_position(self, position):
+        self.rect.midbottom = position
     def get_position(self):
-        return(self.x, self.y)
+        return(self.rect.x, self.rect.y)
+    
+    def destroy(self):
+        if self.friendly:
+            self.rect.y = -scale
+        else:
+            self.kill()

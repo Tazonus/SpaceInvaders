@@ -1,11 +1,11 @@
 from typing import Any, List
 import pygame
 from pygame.sprite import Group
+from config import scale
 
 class Alien(pygame.sprite.Sprite):
-    def __init__(self, scale, x, y, type = 'f'):
+    def __init__(self, x, y, type = 'f'):
         super().__init__()
-        self.scale = scale
         self.type = type
         file_path = 'graphics/' + type + '.png'
         self.image = pygame.transform.scale(pygame.image.load(file_path).convert_alpha(),(scale *2/3, scale/3))
@@ -24,4 +24,4 @@ class Alien(pygame.sprite.Sprite):
                  self.type += '_flip'
 
             file_path = 'graphics/' + self.type + '.png'
-            pygame.transform.scale(pygame.image.load(file_path).convert_alpha(),(self.scale *2/3, self.scale/3))
+            pygame.transform.scale(pygame.image.load(file_path).convert_alpha(),(scale *2/3, scale/3))
