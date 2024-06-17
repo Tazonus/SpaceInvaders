@@ -33,6 +33,13 @@ class Game:
         score_box = score_text.get_rect(topleft = (15,15))
         screen.blit(score_text, score_box)
 
+    def checkwincondition(self):
+        if not self.aliens.sprites():
+            victory_text = self.font.render('Victory!',False,'white')
+            victory_box = victory_text.get_rect(midbottom=(screen_size/2,screen_size/2))
+            screen.blit(victory_text, victory_box)
+
+
     def alien_update(self):
         self.aliens.update(self.alien_direction, speed = 1)
         self.aliens.draw(screen)
@@ -108,6 +115,7 @@ class Game:
         
         self.score()
         self.collision_check()
+        self.checkwincondition()
 
 if __name__ == '__main__':
     # Window managment:
