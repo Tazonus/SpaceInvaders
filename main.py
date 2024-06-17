@@ -34,7 +34,7 @@ class Game:
                 alien_sprite = Alien(x, y, type)
                 self.aliens.add(alien_sprite)
             
-    def alien_colisioncheck(self):
+    def alien_bounce(self):
         aliens = self.aliens.sprites()
         for alien in aliens:
             if alien.rect.x + scale * 3/5 >= screen_size:
@@ -48,18 +48,25 @@ class Game:
         aliens = self.aliens.sprites()
         for alien in aliens:
             alien.rect.y += scale/40
-            
+
+    def collision_check(self):
+        if self.player.sprite.bulletGroup:
+            for bullet in self.player.sprite.bulletGroup:
+                if pygame.sprite.spritecollide(bullet, self.aliens, True):
+                    self.player_sprite.bullet.destroy()
+
     def run(self):
         '''GameLoop here:'''
 
         self.player.update()
         self.aliens.update(self.alien_direction, speed = 1)
-        self.alien_colisioncheck()
+        self.alien_bounce()
+
 
         self.player.draw(screen)
         self.aliens.draw(screen)
         self.player.sprite.bulletGroup.draw(screen)
-
+        self.collision_check()
 
 if __name__ == '__main__':
     # Window managment:
