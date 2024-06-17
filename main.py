@@ -1,5 +1,6 @@
-import pygame, sys
+import pygame, sys, random
 from player import Player
+from bullet import Bullet
 from alien import Alien
 from config import scale
 
@@ -17,6 +18,15 @@ class Game:
         self.aliens = pygame.sprite.Group()
         self.alien_setup(rows = 5, cols = 11)
         self.alien_direction = 1
+        self.enemy_lasers = pygame.sprite.Group()
+    def alien_update(self):
+        self.aliens.update(self.alien_direction, speed = 1)
+        self.aliens.draw(screen)
+
+        self.alien_bounce()
+        
+        self.enemy_lasers.draw(screen)
+        self.enemy_lasers.update()
 
     def alien_setup(self, rows, cols):
         for row_index, row in enumerate(range(rows)):
@@ -49,22 +59,30 @@ class Game:
         for alien in aliens:
             alien.rect.y += scale/40
 
+    def alien_shoot(self):
+        if self.aliens.sprites():
+            shooter = random.choice(self.aliens.sprites())
+            laser = Bullet(-3, shooter.rect.center)
+            self.enemy_lasers.add(laser)
     def collision_check(self):
         if self.player.sprite.bulletGroup:
             for bullet in self.player.sprite.bulletGroup:
                 if pygame.sprite.spritecollide(bullet, self.aliens, True):
                     self.player_sprite.bullet.destroy()
+        if self.enemy_lasers:
+            for laser in self.enemy_lasers:
+                if pygame.sprite.spritecollide(laser, self.player, False):
+                    print("you dead")
 
     def run(self):
         '''GameLoop here:'''
+        self.alien_update()
 
         self.player.update()
-        self.aliens.update(self.alien_direction, speed = 1)
-        self.alien_bounce()
+
 
 
         self.player.draw(screen)
-        self.aliens.draw(screen)
         self.player.sprite.bulletGroup.draw(screen)
         self.collision_check()
 
@@ -82,6 +100,8 @@ if __name__ == '__main__':
     game = Game(screen_size)
     clock = pygame.time.Clock()
 
+    alienshot = pygame.USEREVENT
+    pygame.time.set_timer(alienshot,1000)
     while True:
         screen.fill((0, 0, 0))
         #KeyCheck
@@ -89,6 +109,8 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == alienshot:
+                game.alien_shoot()
         game.run()
         pygame.display.flip()
         clock.tick(60)
