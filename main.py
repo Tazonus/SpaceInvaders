@@ -7,7 +7,8 @@ from config import scale
 class Game:
     def __init__(self,screen_size):
         #General
-
+        self.font = pygame.font.Font('Pixeboy.ttf', 40)
+        self.points = 0
         #Player
         self.player_sprite = Player(screen_size)
         self.player = pygame.sprite.GroupSingle(self.player_sprite)
@@ -19,6 +20,12 @@ class Game:
         self.alien_setup(rows = 5, cols = 11)
         self.alien_direction = 1
         self.enemy_lasers = pygame.sprite.Group()
+
+    def score(self):
+        score_text = self.font.render(f'score: {self.points}', False,'white')
+        score_box = score_text.get_rect(topleft = (15,15))
+        screen.blit(score_text, score_box)
+
     def alien_update(self):
         self.aliens.update(self.alien_direction, speed = 1)
         self.aliens.draw(screen)
@@ -64,21 +71,26 @@ class Game:
             shooter = random.choice(self.aliens.sprites())
             laser = Bullet(-3, shooter.rect.center)
             self.enemy_lasers.add(laser)
+    
     def collision_check(self):
         if self.player.sprite.bulletGroup:
             for bullet in self.player.sprite.bulletGroup:
                 if pygame.sprite.spritecollide(bullet, self.aliens, True):
+                    self.points += 100
                     self.player_sprite.bullet.destroy()
         if self.enemy_lasers:
             for laser in self.enemy_lasers:
                 if pygame.sprite.spritecollide(laser, self.player, False):
-                    print("you dead")
+                    self.points -= 50
+                    if self.points < 0:
+                        self.points = 0
+                    laser.kill()
 
     def run(self):
         '''GameLoop here:'''
         self.alien_update()
-
         self.player.update()
+        self.score()
 
 
 
