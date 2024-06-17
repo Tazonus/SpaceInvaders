@@ -1,0 +1,14 @@
+Important:
+1. Scaling
+2. More alien rows
+3. Spaceship spawning
+4. Correct score counter
+
+Later:
+1. Base size and speed of aliens
+2. walls
+3. Animations
+4. High-Score with leaderboard(potentialy conecting to server to upload score, download leaderboard)
+5. 3 lifes system
+6. Levels
+7. Maybe some copyright free music
