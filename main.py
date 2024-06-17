@@ -1,17 +1,37 @@
 import pygame, sys
 from player import Player
+from bullet import Bullet
 
 class Game:
     def __init__(self,screen_size):
-        Player_sprite = Player(screen_size,64)
-        self.player = pygame.sprite.GroupSingle(Player_sprite)
+        scale = 64
+        self.player = Player(screen_size , scale)
+        self.projectile = Bullet(scale, -10)
+
+        self.player_sprite = pygame.sprite.GroupSingle(self.player)
+
+        ### w space invaders nie można oddać kolejnego strzału dopóki obecny w nic nie trafi/dojdzie do końca mapy
+        ### dlatego będę używał jednego obiektu zamiast tworzyć przy każdym wystrzale
 
     def run(self):
         '''GameLoop here:'''
-        self.player.update()
-        self.player.draw(screen)
-        #update all sprite groups
-        #draw all sprite groups
+        self.input_handling()
+        self.projectile.update()
+
+        self.player_sprite.draw(screen)
+        screen.blit(self.projectile.image, self.projectile.get_position())
+
+
+    def input_handling(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RIGHT]:
+            self.player.move(1)
+        elif keys[pygame.K_LEFT]:
+            self.player.move(-1)
+        if keys[pygame.K_z]:
+            pos = self.player.get_position()
+            self.projectile.shot(pos)
+            
 
 if __name__ == '__main__':
     # Window managment:
